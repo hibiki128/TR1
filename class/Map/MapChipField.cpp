@@ -1,15 +1,87 @@
 #include "MapChipField.h"
 #include "cassert"
-#include "fstream"
-#include "map"
-#include "sstream"
+#include "random"
+#include "vector"
+#include <iostream>
 
-namespace {
-std::map<std::string, MapChipType> mapChipTable = {
-    {"0", MapChipType::kBlank},
-    {"1", MapChipType::kBlock},
-};
+void MapChipField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int holeNum3x2, int holeNum4x3) {
+    // マップの初期化
+    ResetMapChipData();
 
+    // マップのサイズに基づいてブロックの数を計算する
+    const int kBlockHorizontal = kNumBlockHorizontal;
+    const int kBlockVertical = kNumBlockVirtical;
+
+    for (auto& row : mapChipData_.data) {
+        std::fill(row.begin(), row.end(), MapChipType::kBlank);
+    }
+
+    // 周囲に枠を追加する
+    for (int x = 0; x < kBlockHorizontal; ++x) {
+        mapChipData_.data[0][x] = MapChipType::kBorder;
+        mapChipData_.data[kBlockVertical - 1][x] = MapChipType::kBorder;
+    }
+    for (int y = 0; y < kBlockVertical; ++y) {
+        mapChipData_.data[y][0] = MapChipType::kBorder;
+        mapChipData_.data[y][kBlockHorizontal - 1] = MapChipType::kBorder;
+    }
+
+    std::random_device rd;
+    std::mt19937 rng(rd());
+
+    auto placeObject = [&](int width, int height, MapChipType type) {
+        bool placed = false;
+        while (!placed) {
+            int x = rng() % (kBlockHorizontal - width);
+            int y = rng() % (kBlockVertical - height);
+
+            // オブジェクトを配置可能かどうかをチェックする
+            bool canPlace = true;
+            if (x + width <= kBlockHorizontal && y + height <= kBlockVertical) {
+                for (int i = 0; i < width; ++i) {
+                    for (int j = 0; j < height; ++j) {
+                        if (mapChipData_.data[y + j][x + i] != MapChipType::kBlank) {
+                            canPlace = false;
+                            break;
+                        }
+                    }
+                    if (!canPlace) break;
+                }
+            }
+            else {
+                canPlace = false;
+            }
+
+            if (canPlace) {
+                for (int i = 0; i < width; ++i) {
+                    for (int j = 0; j < height; ++j) {
+                        mapChipData_.data[y + j][x + i] = type;
+                    }
+                }
+                placed = true;
+            }
+        }
+        };
+
+    // 指定された数の2x2の障害物を配置する
+    for (int i = 0; i < blockNum2x2; ++i) {
+        placeObject(2, 2, MapChipType::kBlock);
+    }
+
+    // 指定された数の3x3の障害物を配置する
+    for (int i = 0; i < blockNum3x3; ++i) {
+        placeObject(3, 3, MapChipType::kBlock);
+    }
+
+    // 指定された数の3x2の穴を配置する
+    for (int i = 0; i < holeNum3x2; ++i) {
+        placeObject(3, 2, MapChipType::kHole);
+    }
+
+    // 指定された数の4x3の穴を配置する
+    for (int i = 0; i < holeNum4x3; ++i) {
+        placeObject(4, 3, MapChipType::kHole);
+    }
 }
 
 void MapChipField::ResetMapChipData() {
@@ -18,45 +90,6 @@ void MapChipField::ResetMapChipData() {
 	mapChipData_.data.resize(kNumBlockVirtical);
 	for (std::vector<MapChipType>& mapChipDataLine : mapChipData_.data) {
 		mapChipDataLine.resize(kNumBlockHorizontal);
-	}
-}
-
-void MapChipField::LoadMapChipCsv(const std::string& filePath) {
-
-	// マップチップデータをリセット
-	ResetMapChipData();
-
-	// ファイルを開く
-	std::ifstream file;
-	file.open(filePath);
-	assert(file.is_open());
-
-	// マップチップCSV
-	std::stringstream mapChipCsv;
-	// ファイルの内容を文字列ストリームにコピー
-	mapChipCsv << file.rdbuf();
-	// ファイルを閉じる
-	file.close();
-
-	std::string line;
-
-	// CSVからマップチップデータを読み込む
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-
-		getline(mapChipCsv, line);
-
-		// 1行分の文字列をストリームに変換して解析しやすくする
-		std::istringstream line_stream(line);
-
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-
-			std::string word;
-			getline(line_stream, word, ',');
-
-			if (mapChipTable.contains(word)) {
-				mapChipData_.data[i][j] = mapChipTable[word];
-			}
-		}
 	}
 }
 
@@ -70,7 +103,9 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 	return mapChipData_.data[yIndex][xIndex];
 }
 
-Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0); }
+Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) {
+	return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
+}
 
 IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
 	IndexSet indexSet = {};
@@ -98,3 +133,4 @@ MapChipField::Rect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex
 
 	return rect;
 }
+

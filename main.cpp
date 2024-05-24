@@ -1,4 +1,5 @@
 #include <Novice.h>
+#include"MyGame.h"
 
 const char kWindowTitle[] = "LE2B_20_ハギワラ_ヒビキ";
 
@@ -7,6 +8,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
+	MyGame* myGame = nullptr;
+
+	myGame = new MyGame();
+	myGame->Initialize();
 
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
@@ -25,6 +30,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
+		myGame->Update();
+
 		///
 		/// ↑更新処理ここまで
 		///
@@ -32,6 +39,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
+
+		myGame->Draw();
 
 		///
 		/// ↑描画処理ここまで
@@ -45,6 +54,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		}
 	}
+
+	delete myGame;
 
 	// ライブラリの終了
 	Novice::Finalize();
