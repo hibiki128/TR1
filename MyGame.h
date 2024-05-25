@@ -1,5 +1,6 @@
 #pragma once
 #include"class/Map/MapChipField.h"
+#include"Player.h"
 class MyGame
 {
 public:
@@ -37,7 +38,12 @@ public:
 private:
 
 	// クラス宣言
-	MapChipField* mapChipField_ = nullptr;
+	MapField* mapChipField_ = nullptr;
+	Player* player_ = nullptr;
+
+	Vector2 playerPosition_ = {};
+	Vector2Int mousePosition_ = {};
+	Vector2 point = {};
 
 	// ブロックの数
 	int blockNum2x2 = 0;

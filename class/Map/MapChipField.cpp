@@ -4,7 +4,7 @@
 #include "vector"
 #include <iostream>
 
-void MapChipField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int holeNum3x2, int holeNum4x3) {
+void MapField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int holeNum3x2, int holeNum4x3) {
     // マップの初期化
     ResetMapChipData();
 
@@ -12,18 +12,18 @@ void MapChipField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int
     const int kBlockHorizontal = kNumBlockHorizontal;
     const int kBlockVertical = kNumBlockVirtical;
 
-    for (auto& row : mapChipData_.data) {
+    for (auto& row : mapData_.data) {
         std::fill(row.begin(), row.end(), MapChipType::kBlank);
     }
 
     // 周囲に枠を追加する
     for (int x = 0; x < kBlockHorizontal; ++x) {
-        mapChipData_.data[0][x] = MapChipType::kBorder;
-        mapChipData_.data[kBlockVertical - 1][x] = MapChipType::kBorder;
+        mapData_.data[0][x] = MapChipType::kBorder;
+        mapData_.data[kBlockVertical - 1][x] = MapChipType::kBorder;
     }
     for (int y = 0; y < kBlockVertical; ++y) {
-        mapChipData_.data[y][0] = MapChipType::kBorder;
-        mapChipData_.data[y][kBlockHorizontal - 1] = MapChipType::kBorder;
+        mapData_.data[y][0] = MapChipType::kBorder;
+        mapData_.data[y][kBlockHorizontal - 1] = MapChipType::kBorder;
     }
 
     std::random_device rd;
@@ -40,7 +40,7 @@ void MapChipField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int
             if (x + width <= kBlockHorizontal && y + height <= kBlockVertical) {
                 for (int i = 0; i < width; ++i) {
                     for (int j = 0; j < height; ++j) {
-                        if (mapChipData_.data[y + j][x + i] != MapChipType::kBlank) {
+                        if (mapData_.data[y + j][x + i] != MapChipType::kBlank) {
                             canPlace = false;
                             break;
                         }
@@ -55,7 +55,7 @@ void MapChipField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int
             if (canPlace) {
                 for (int i = 0; i < width; ++i) {
                     for (int j = 0; j < height; ++j) {
-                        mapChipData_.data[y + j][x + i] = type;
+                        mapData_.data[y + j][x + i] = type;
                     }
                 }
                 placed = true;
@@ -84,53 +84,31 @@ void MapChipField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int
     }
 }
 
-void MapChipField::ResetMapChipData() {
-	// マップチップデータをリセット
-	mapChipData_.data.clear();
-	mapChipData_.data.resize(kNumBlockVirtical);
-	for (std::vector<MapChipType>& mapChipDataLine : mapChipData_.data) {
-		mapChipDataLine.resize(kNumBlockHorizontal);
-	}
+void MapField::ResetMapChipData() {
+    // マップチップデータをリセット
+    mapData_.data.clear();
+    mapData_.data.resize(kNumBlockVirtical);
+    for (std::vector<MapChipType>& mapChipDataLine : mapData_.data) {
+        mapChipDataLine.resize(kNumBlockHorizontal);
+    }
 }
 
-MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
-	if (xIndex < 0 || kNumBlockHorizontal - 1 < xIndex) {
-		return MapChipType::kBlank;
-	}
-	if (yIndex < 0 || kNumBlockVirtical - 1 < yIndex) {
-		return MapChipType::kBlank;
-	}
-	return mapChipData_.data[yIndex][xIndex];
+// 新しいゲッターを追加する
+MapChipType MapField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
+    if (xIndex < 0 || kNumBlockHorizontal - 1 < xIndex) {
+        return MapChipType::kBlank;
+    }
+    if (yIndex < 0 || kNumBlockVirtical - 1 < yIndex) {
+        return MapChipType::kBlank;
+    }
+    return mapData_.data[yIndex][xIndex];
 }
 
-Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) {
-	return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
+Vector2 MapField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) {
+    return Vector2(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex));
 }
 
-IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
-	IndexSet indexSet = {};
-
-	// x座標から水平インデックスを計算
-	indexSet.xIndex = uint32_t((position.x + kBlockWidth / 2) / kBlockWidth);
-
-	// y座標から垂直インデックスを計算
-	indexSet.yIndex = kNumBlockVirtical - 1 - uint32_t((position.y + kBlockHeight / 2) / kBlockHeight);
-
-	return indexSet;
+// 新しいゲッターの実装
+Vector2 MapField::GetPositionByIndexSet(const IndexSet& indexSet) {
+    return GetMapChipPositionByIndex(indexSet.xIndex, indexSet.yIndex);
 }
-
-MapChipField::Rect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
-	// 指定ブロックの中心座標を取得する
-	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex);
-
-	Rect rect;
-
-	// 中心座標から矩形の範囲を計算
-	rect.left = center.x - kBlockWidth / 2.0f;
-	rect.right = center.x + kBlockWidth / 2.0f;
-	rect.bottom = center.y - kBlockHeight / 2.0f;
-	rect.top = center.y + kBlockHeight / 2.0f;
-
-	return rect;
-}
-

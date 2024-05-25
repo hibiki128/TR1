@@ -2,7 +2,7 @@
 #include "cstdint"
 #include "string"
 #include "vector"
-#include "Vector3.h"
+#include "Vector2.h"
 
 enum class MapChipType {
     kBlank, // 空白
@@ -11,7 +11,7 @@ enum class MapChipType {
     kHole
 };
 
-struct MapChipData {
+struct MapData {
     std::vector<std::vector<MapChipType>> data;
 };
 
@@ -20,7 +20,7 @@ struct IndexSet {
     uint32_t yIndex;
 };
 
-class MapChipField
+class MapField
 {
 private:
     // 1ブロックのサイズ
@@ -30,7 +30,7 @@ private:
     static inline const uint32_t kNumBlockVirtical = 25; // 縦
     static inline const uint32_t kNumBlockHorizontal = 80; // 横
 
-    MapChipData mapChipData_;
+    MapData mapData_;
 
 public:
 
@@ -42,23 +42,14 @@ public:
     };
 
     void ResetMapChipData();
-
-    //void LoadMapChipCsv(const std::string& filePath);
-
+    void GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int holeNum3x2, int holeNum4x3);
     MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
-
-    Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
+    Vector2 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
+    Vector2 GetPositionByIndexSet(const IndexSet& indexSet);
 
     uint32_t GetNumBlockVirtical() { return kNumBlockVirtical; };
     uint32_t GetNumBlockHorizontal() { return kNumBlockHorizontal; };
     float GetBlockWidth() { return kBlockWidth; };
     float GetBlockHeight() { return kBlockHeight; };
-
-    IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
-
-    Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
-
-    void GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int holeNum3x2, int holeNum4x3);
-
 };
 
