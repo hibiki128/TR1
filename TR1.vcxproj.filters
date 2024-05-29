@@ -58,7 +58,7 @@
     <ClCompile Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.cpp">
       <Filter>KamataEngine\Source</Filter>
     </ClCompile>
-    <ClCompile Include="class\Map\MapChipField.cpp">
+    <ClCompile Include="class\Map\MapField.cpp">
       <Filter>ソースファイル\class</Filter>
     </ClCompile>
     <ClCompile Include="MyGame.cpp">
@@ -70,14 +70,14 @@
     <ClCompile Include="Player.cpp">
       <Filter>ソースファイル\class</Filter>
     </ClCompile>
-    <ClCompile Include="math\Matrix4x4Math.cpp">
+    <ClCompile Include="math\M4x4.cpp">
       <Filter>ソースファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Easing.cpp">
       <Filter>ソースファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="Vector2.cpp">
-      <Filter>ソースファイル\math</Filter>
+      <Filter>KamataEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +150,7 @@
     <ClInclude Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.h">
       <Filter>KamataEngine\Include</Filter>
     </ClInclude>
-    <ClInclude Include="class\Map\MapChipField.h">
+    <ClInclude Include="class\Map\MapField.h">
       <Filter>ヘッダーファイル\class</Filter>
     </ClInclude>
     <ClInclude Include="C:\KamataEngine\DirectXGame\math\Matrix4x4.h">
@@ -163,7 +163,7 @@
     <ClInclude Include="math\Matrix4x4.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="math\Matrix4x4Math.h">
+    <ClInclude Include="math\M4x4.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">

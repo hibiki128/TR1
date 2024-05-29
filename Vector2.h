@@ -25,6 +25,10 @@ public:
 	Vector2& operator*=(const Vector2& obj);
 	// /=
 	Vector2& operator/=(const Vector2& obj);
+	// == 演算子の定義
+	bool operator==(const Vector2& other) const;
+	// != 演算子の定義
+	bool operator!=(const Vector2& other) const;
 };
 
 class Vector2Int
@@ -58,4 +62,8 @@ public:
 	Vector2Int& operator*=(const Vector2Int& obj);
 	// /=
 	Vector2Int& operator/=(const Vector2Int& obj);
+	// == 演算子の定義
+	bool operator==(const Vector2Int& other) const;
+	// != 演算子の定義
+	bool operator!=(const Vector2Int& other) const;
 };
