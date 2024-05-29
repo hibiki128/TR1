@@ -61,6 +61,7 @@ void updateGrid(vector<vector<int>>& grid, const Vector2& oldPos, const Vector2&
 
 void Player::Initialize(const Vector2& position) {
 	position_ = position;
+
 }
 
 // 方向ベクトルを計算するヘルパー関数
@@ -76,40 +77,43 @@ Vector2 Direction(const Vector2& a, const Vector2& b) {
 
 void Player::Update(Vector2Int& mousePosition, Vector2& point, MapField& mapField) {
 	// マウス位置の制限
-	if (mousePosition.x > 1255) {
-		mousePosition.x = 1255;
+	if (mousePosition.x > 600) {
+		mousePosition.x = 600;
 	}
-	else if (mousePosition.x < 25) {
-		mousePosition.x = 25;
+	else if (mousePosition.x < 40) {
+		mousePosition.x = 40;
 	}
-	if (mousePosition.y > 376) {
-		mousePosition.y = 376;
+	if (mousePosition.y > 600) {
+		mousePosition.y = 600;
 	}
-	else if (mousePosition.y < 25) {
-		mousePosition.y = 25;
+	else if (mousePosition.y < 40) {
+		mousePosition.y = 40;
 	}
-
-	int PxIndex = static_cast<int>(position_.x / MapField::kBlockWidth);
-	int PyIndex = static_cast<int>(position_.y / MapField::kBlockHeight);
-	if (PxIndex >= 0 && PxIndex < MapField::kNumBlockHorizontal &&
-		PyIndex >= 0 && PyIndex < MapField::kNumBlockVirtical) {
-		mapField.mapData_[PxIndex][PyIndex] = static_cast<int>(MapType::kPlayer);
-	}
-
+	
 	// マウスクリックで目的地を設定
 	if (Novice::IsTriggerMouse(1)) {
 		point = { static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y) };
+
+		cooltime = 5;
 
 		// マップデータを更新
 		int xIndex = static_cast<int>(point.x / MapField::kBlockWidth);
 		int yIndex = static_cast<int>(point.y / MapField::kBlockHeight);
 		if (xIndex >= 0 && xIndex < MapField::kNumBlockHorizontal &&
 			yIndex >= 0 && yIndex < MapField::kNumBlockVirtical) {
-			mapField.mapData_[xIndex][yIndex] = static_cast<int>(MapType::kGoal);
+			// 目標地点がkBlock（1）またはkHole（2）でない場合のみ設定
+			if (mapField.mapData_[xIndex][yIndex] != static_cast<int>(MapType::kBlock) &&
+				mapField.mapData_[xIndex][yIndex] != static_cast<int>(MapType::kHole)) {
+				mapField.mapData_[xIndex][yIndex] = static_cast<int>(MapType::kGoal);
+			}
 		}
 	}
 
-	if (position_ == point) {
+	if (cooltime > 0) {
+		cooltime -= 1;
+	}
+
+	if (cooltime <= 0) {
 		// パスを探索
 		vector<Vector2> path = findPathToAdjacentCell(mapField.mapData_, position_);
 		if (!path.empty()) {
@@ -121,6 +125,7 @@ void Player::Update(Vector2Int& mousePosition, Vector2& point, MapField& mapFiel
 			// プレイヤーの位置を更新
 			position_ = nextPos;
 		}
+		cooltime = 5;
 	}
 
 	// プレイヤーがポイントに到達したかどうかをチェック
@@ -136,6 +141,19 @@ void Player::Update(Vector2Int& mousePosition, Vector2& point, MapField& mapFiel
 	Novice::DrawEllipse(mousePosition.x, mousePosition.y, 10, 10, 0.0f, 0x00ffff77, kFillModeSolid);
 }
 
-void Player::Draw() {
-	Novice::DrawBox(static_cast<int>(position_.x), static_cast<int>(position_.y), kWidth, kHeight, 0.0f, GREEN, kFillModeSolid);
+void Player::Draw(MapField& mapField) {
+	//Novice::DrawBox(static_cast<int>(position_.x), static_cast<int>(position_.y), kWidth, kHeight, 0.0f, GREEN, kFillModeSolid);
+	for (uint32_t y = 0; y < mapField.kNumBlockVirtical; ++y) {
+		for (uint32_t x = 0; x < mapField.kNumBlockHorizontal; ++x) {
+			MapType type = mapField.GetMapChipTypeByIndex(x, y);
+			Vector2 position = mapField.GetMapChipPositionByIndex(x, y);
+			int width = static_cast<int>(mapField.kBlockWidth);
+			int height = static_cast<int>(mapField.kBlockWidth);
+
+			if (type == MapType::kPlayer) {
+				// 障害物の描画
+				Novice::DrawBox(static_cast<int>(position.x), static_cast<int>(position.y), width, height, 0.0f, GREEN, kFillModeSolid);
+			}
+		}
+	}
 }

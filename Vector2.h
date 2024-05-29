@@ -15,6 +15,8 @@ public:
 	Vector2 operator*(const Vector2& obj) const;
 	// 乗算(スカラー倍)
 	Vector2 operator*(const float& scalar) const;
+
+	friend Vector2 operator*(const float& scalar, const Vector2& vec) { return vec * scalar; }
 	// 除算
 	Vector2 operator/(const Vector2& obj) const;
 	// +=

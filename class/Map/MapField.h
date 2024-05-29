@@ -26,8 +26,8 @@ struct IndexSet {
 class MapField
 {
 public:
-	static inline const float kBlockWidth = 16.0f;
-	static inline const float kBlockHeight = 16.0f;
+	static inline const float kBlockWidth = 32.0f;
+	static inline const float kBlockHeight = 32.0f;
 	static inline const int kNumBlockVirtical = 20; // 縦
 	static inline const int kNumBlockHorizontal = 20; // 横
 

@@ -7,6 +7,7 @@ private:
 	static inline const int kWidth = 16;
 
 	Vector2 position_;
+	float cooltime = 0;
 
 
 public:
@@ -14,5 +15,5 @@ public:
 
 	void Update(Vector2Int& mousePosition, Vector2& point, MapField& mapField);
 
-	void Draw();
+	void Draw(MapField& mapField);
 };

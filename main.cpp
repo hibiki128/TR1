@@ -7,7 +7,7 @@ const char kWindowTitle[] = "LE2B_20_ハギワラ_ヒビキ";
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ライブラリの初期化
-	Novice::Initialize(kWindowTitle, 1280, 720);
+	Novice::Initialize(kWindowTitle, 1000, 640);
 	MyGame* myGame = nullptr;
 
 	myGame = new MyGame();
