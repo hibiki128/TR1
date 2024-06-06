@@ -79,6 +79,9 @@
     <ClCompile Include="Vector2.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
+    <ClCompile Include="RouteSearch.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -178,5 +181,6 @@
     <ClInclude Include="Vector2.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
+    <ClInclude Include="RouteSearch.h" />
   </ItemGroup>
 </Project>
