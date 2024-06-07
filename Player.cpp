@@ -61,12 +61,12 @@ void Player::Update(Vector2Int& mousePosition, Vector2& point, MapField& mapFiel
 
 	if (cooltime <= 0) {
 		// パスを探索
-		std::vector<Vector2> path = RouteSearch::findPathToAdjacentCell(mapField.mapData_, position_);
+		std::vector<Vector2> path = RouteSearch::findPathToAdjacentCell(mapField.mapData_, position_, 5);
 		if (!path.empty()) {
 			Vector2 nextPos = path[1]; // 次の移動先の位置を取得（最初の要素は現在の位置なので、次の要素を参照）
 
 			// マップデータを更新：プレイヤーの現在位置を空白に、次の位置をプレイヤーに設定
-			RouteSearch::updateGrid(mapField.mapData_, position_, nextPos);
+			RouteSearch::updateGrid(mapField.mapData_, position_, nextPos, 4);
 
 			// プレイヤーの位置を更新
 			position_ = nextPos;

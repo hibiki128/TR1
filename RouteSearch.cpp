@@ -4,7 +4,7 @@
 
 using namespace std;
 
-vector<Vector2> RouteSearch::findPathToAdjacentCell(vector<vector<int>>& grid, Vector2 start) {
+vector<Vector2> RouteSearch::findPathToAdjacentCell(vector<vector<int>>& grid, Vector2 start,int goalNum) {
 	int rows = MapField::kNumBlockHorizontal;
 	int cols = MapField::kNumBlockVirtical;
 	vector<vector<bool>> visited(rows, vector<bool>(cols, false));
@@ -26,7 +26,7 @@ vector<Vector2> RouteSearch::findPathToAdjacentCell(vector<vector<int>>& grid, V
 				visited[nx][ny] = true;
 				previous[nx][ny] = current;
 
-				if (grid[nx][ny] == 5) { // 5が敵を表す
+				if (grid[nx][ny] == goalNum) { 
 					// 敵の隣接セルまでの経路を復元
 					vector<Vector2> path;
 					Vector2 step = { float(nx), float(ny) };
@@ -49,8 +49,8 @@ vector<Vector2> RouteSearch::findPathToAdjacentCell(vector<vector<int>>& grid, V
 	return {}; // 敵が見つからなかった場合
 }
 
-void RouteSearch::updateGrid(vector<vector<int>>& grid, const Vector2& oldPos, const Vector2& newPos)
+void RouteSearch::updateGrid(vector<vector<int>>& grid, const Vector2& oldPos, const Vector2& newPos,int playerNum)
 {
 	grid[int(oldPos.x)][int(oldPos.y)] = 0; // 古い位置を空きスペースに
-	grid[int(newPos.x)][int(newPos.y)] = 4; // 新しい位置にプレイヤーを設定
+	grid[int(newPos.x)][int(newPos.y)] = playerNum; // 新しい位置にプレイヤーを設定
 }
