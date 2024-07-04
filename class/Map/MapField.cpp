@@ -50,7 +50,7 @@ void MapField::GenerateRandomObstacles(int blockNum2x2, int blockNum3x3, int hol
         placeObject(3, 2, MapType::kHole);
     }
     for (int i = 0; i < holeNum4x3; ++i) {
-        placeObject(7, 2, MapType::kHole);
+        placeObject(4, 3, MapType::kHole);
     }
 }
 

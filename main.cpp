@@ -1,5 +1,5 @@
 #include <Novice.h>
-#include"MyGame.h"
+#include"./class/Scene/MyGame.h"
 
 const char kWindowTitle[] = "LE2B_20_ハギワラ_ヒビキ";
 
