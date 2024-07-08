@@ -20,7 +20,7 @@ void Astar::resetVertices() {
     exploredEdges.clear(); // 探索したエッジをリセット
 }
 
-std::vector<Vertex*> Astar::a_star(Vertex* start, Vertex* goal) {
+std::vector<Vertex*> Astar::a_star(Vertex* start, Vertex* goal, const std::vector<Vertex*>& obstacles) {
     resetVertices(); // 各探索の前にリセット
 
     std::priority_queue<Node, std::vector<Node>, std::greater<Node>> queue;
@@ -49,6 +49,11 @@ std::vector<Vertex*> Astar::a_star(Vertex* start, Vertex* goal) {
 
         for (Vertex* neighbor : node.target->neighbors) {
             if (neighbor->isClosed) continue;
+
+            // 障害物をチェック
+            if (std::find(obstacles.begin(), obstacles.end(), neighbor) != obstacles.end()) {
+                continue; // 障害物の頂点をスキップ
+            }
 
             Node new_node;
             new_node.parent = node.target;

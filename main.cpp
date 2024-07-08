@@ -22,8 +22,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     std::uniform_real_distribution<float> disY(0.0f, 640.0f);
 
     // 10x10グリッドの頂点を作成
-    int gridSize = 3;
-    Vertex grid[3][3];
+    int gridSize = 5;
+    Vertex grid[5][5];
     float spacing = 50.0f;
 
     // 頂点の座標を設定
@@ -75,6 +75,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // スタートとゴールを設定
     Vertex* start = &grid[0][0];
     Vertex* goal = &grid[2][2];
+    // 障害物を設定
+    std::vector<Vertex*> obstacles(3, nullptr); // サイズを3に設定
+    Vertex* selectedVertex = nullptr;
 
     bool StartSearch = false;
     std::vector<std::pair<Vertex*, Vertex*>> pathEdges;
@@ -113,10 +116,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         if (keys[DIK_R] && !preKeys[DIK_R]) {
             //randomizeVertices(); // ランダムで頂点を再設定
             StartSearch = false; // 探索をリセット
+            obstacles.clear();
+            obstacles.resize(3, nullptr); // サイズを3にリセット
         }
         if (StartSearch) {
             // A* アルゴリズムを実行
-            std::vector<Vertex*> path = astar.a_star(start, goal);
+            std::vector<Vertex*> path = astar.a_star(start, goal,obstacles);
             pathEdges.clear();
             exploredEdges.clear();
             for (size_t i = 0; i < path.size() - 1; ++i) {
@@ -129,8 +134,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             }
         }
 
-        // マウスの左クリックでGoalを設定する
-        if (Novice::IsTriggerMouse(0)) {
+        // GキーでGoalを設定する
+        if (keys[DIK_G] && !preKeys[DIK_G]) {
             // マウスの位置に最も近い頂点をGoalに設定する
             float minDistance = FLT_MAX;
             Vertex* closestVertex = nullptr;
@@ -151,8 +156,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             }
         }
 
-        // マウスの右クリックでStartを設定する
-        if (Novice::IsTriggerMouse(1)) {
+        // SキーでStartを設定する
+        if (keys[DIK_S]&&!preKeys[DIK_S]) {
             // マウスの位置に最も近い頂点をStartに設定する
             float minDistance = FLT_MAX;
             Vertex* closestVertex = nullptr;
@@ -171,6 +176,60 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 start = closestVertex;
                 StartSearch = false; // 探索をリセット
             }
+        }
+
+        // 1, 2, 3キーで障害物を設定する
+        for (int i = 0; i < 3; ++i) {
+            if (keys[DIK_1 + i] && !preKeys[DIK_1 + i]) {
+                float minDistance = FLT_MAX;
+                Vertex* closestVertex = nullptr;
+
+                for (int y = 0; y < gridSize; ++y) {
+                    for (int x = 0; x < gridSize; ++x) {
+                        float distance = Vector2::Distance(Vector2(static_cast<float>(mouseX), static_cast<float>(mouseY)), Vector2(grid[y][x].x, grid[y][x].y));
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestVertex = &grid[y][x];
+                        }
+                    }
+                }
+
+                if (closestVertex && minDistance < kClickDistance) {
+                    obstacles[i] = closestVertex;
+                    StartSearch = false; // 探索をリセット
+                }
+            }
+        }
+
+        // 左クリックで頂点を選択/解除
+        if (Novice::IsTriggerMouse(0)) {
+            if (selectedVertex == nullptr) {
+                // 最も近い頂点を選択
+                float minDistance = FLT_MAX;
+                for (int y = 0; y < gridSize; ++y) {
+                    for (int x = 0; x < gridSize; ++x) {
+                        float distance = Vector2::Distance(Vector2(static_cast<float>(mouseX), static_cast<float>(mouseY)), Vector2(grid[y][x].x, grid[y][x].y));
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            selectedVertex = &grid[y][x];
+                        }
+                    }
+                }
+                // クリック距離が閾値以下なら選択
+                if (minDistance >= kClickDistance) {
+                    selectedVertex = nullptr;
+                }
+            }
+            else {
+                // 選択解除
+                selectedVertex = nullptr;
+            }
+        }
+
+        // 選択された頂点があればマウスの位置に追従
+        if (selectedVertex) {
+            selectedVertex->x = static_cast<float>(mouseX);
+            selectedVertex->y = static_cast<float>(mouseY);
         }
 
         ///
@@ -220,10 +279,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 int drawY = static_cast<int>(grid[y][x].y);
 
                 if (&grid[y][x] == start) {
-                    Novice::DrawEllipse(drawX, drawY, 5, 5, 0.0f, RED, kFillModeSolid);
+                    Novice::DrawEllipse(drawX, drawY, 5, 5, 0.0f, BLUE, kFillModeSolid);
                 }
                 else if (&grid[y][x] == goal) {
-                    Novice::DrawEllipse(drawX, drawY, 5, 5, 0.0f, BLUE, kFillModeSolid);
+                    Novice::DrawEllipse(drawX, drawY, 5, 5, 0.0f, 0xffff00ff, kFillModeSolid);
+                }
+                else if (std::find(obstacles.begin(), obstacles.end(), &grid[y][x]) != obstacles.end()) {
+                    Novice::DrawEllipse(drawX, drawY, 5, 5, 0.0f, RED, kFillModeSolid); // 障害物を赤色で描画
                 }
                 else {
                     Novice::DrawEllipse(drawX, drawY, 5, 5, 0.0f, WHITE, kFillModeSolid);

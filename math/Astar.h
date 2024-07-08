@@ -34,5 +34,5 @@ public:
 
     void resetVertices();
 
-    std::vector<Vertex*> a_star(Vertex* start, Vertex* goal);
+    std::vector<Vertex*> a_star(Vertex* start, Vertex* goal, const std::vector<Vertex*>& obstacles);
 };
