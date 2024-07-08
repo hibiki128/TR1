@@ -85,9 +85,6 @@
     <ClCompile Include="math\Astar.cpp">
       <Filter>ソースファイル\math</Filter>
     </ClCompile>
-    <ClCompile Include="math\PathFinding.cpp">
-      <Filter>ソースファイル\math</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -193,9 +190,6 @@
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
     <ClInclude Include="math\Vector2.h">
-      <Filter>ヘッダーファイル\math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\PathFinding.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
   </ItemGroup>

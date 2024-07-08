@@ -1,4 +1,5 @@
 #pragma once
+#include "cmath"
 class Vector2
 {
 public:
@@ -31,6 +32,14 @@ public:
 	bool operator==(const Vector2& other) const;
 	// != 演算子の定義
 	bool operator!=(const Vector2& other) const;
+
+	// 距離の計算関数
+	static float Distance(const Vector2& v1, const Vector2& v2) {
+		float dx = v2.x - v1.x;
+		float dy = v2.y - v1.y;
+		return std::sqrtf(dx * dx + dy * dy);
+	}
+
 };
 
 class Vector2Int
