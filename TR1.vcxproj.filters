@@ -61,14 +61,8 @@
     <ClCompile Include="class\Map\MapField.cpp">
       <Filter>ソースファイル\class</Filter>
     </ClCompile>
-    <ClCompile Include="MyGame.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
     <ClCompile Include="math\Vector3.cpp">
       <Filter>ソースファイル\math</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソースファイル\class</Filter>
     </ClCompile>
     <ClCompile Include="math\M4x4.cpp">
       <Filter>ソースファイル\math</Filter>
@@ -76,11 +70,20 @@
     <ClCompile Include="math\Easing.cpp">
       <Filter>ソースファイル\math</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2.cpp">
-      <Filter>KamataEngine</Filter>
+    <ClCompile Include="math\Vector2.cpp">
+      <Filter>ソースファイル\math</Filter>
     </ClCompile>
-    <ClCompile Include="RouteSearch.cpp">
-      <Filter>KamataEngine</Filter>
+    <ClCompile Include="class\Char\Player.cpp">
+      <Filter>ソースファイル\class</Filter>
+    </ClCompile>
+    <ClCompile Include="class\Scene\MyGame.cpp">
+      <Filter>ソースファイル\class</Filter>
+    </ClCompile>
+    <ClCompile Include="math\RouteSearch.cpp">
+      <Filter>ソースファイル\math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Astar.cpp">
+      <Filter>ソースファイル\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +162,6 @@
     <ClInclude Include="C:\KamataEngine\DirectXGame\math\Matrix4x4.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="MyGame.h" />
     <ClInclude Include="math\Easing.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
@@ -169,18 +171,26 @@
     <ClInclude Include="math\M4x4.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダーファイル\math</Filter>
-    </ClInclude>
     <ClInclude Include="math\Vector3.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
     <ClInclude Include="math\Vector4.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
+    <ClInclude Include="math\Astar.h">
       <Filter>ヘッダーファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="RouteSearch.h" />
+    <ClInclude Include="class\Scene\MyGame.h">
+      <Filter>ヘッダーファイル\class</Filter>
+    </ClInclude>
+    <ClInclude Include="class\Char\Player.h">
+      <Filter>ヘッダーファイル\class</Filter>
+    </ClInclude>
+    <ClInclude Include="math\RouteSearch.h">
+      <Filter>ヘッダーファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector2.h">
+      <Filter>ヘッダーファイル\math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

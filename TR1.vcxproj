@@ -119,6 +119,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="class\Map\MapField.cpp" />
     <ClCompile Include="class\Scene\MyGame.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="math\Astar.cpp" />
     <ClCompile Include="math\Easing.cpp" />
     <ClCompile Include="math\M4x4.cpp" />
     <ClCompile Include="math\RouteSearch.cpp" />
@@ -153,6 +154,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="class\Char\Player.h" />
     <ClInclude Include="class\Map\MapField.h" />
     <ClInclude Include="class\Scene\MyGame.h" />
+    <ClInclude Include="math\Astar.h" />
     <ClInclude Include="math\Easing.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\M4x4.h" />
