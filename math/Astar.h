@@ -27,6 +27,7 @@ struct Node {
 class Astar {
 public:
     std::vector<Vertex*> vertices;
+    std::vector<std::pair<Vertex*, Vertex*>> exploredEdges;
 
     float real_cost(Vertex* a, Vertex* b);
     float heuristic_cost(Vertex* a, Vertex* b);

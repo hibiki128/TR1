@@ -1,29 +1,26 @@
 #include "Astar.h"
 
-float Astar::real_cost(Vertex* a, Vertex* b)
-{
+float Astar::real_cost(Vertex* a, Vertex* b) {
     // 2つの頂点間のマンハッタン距離を計算
     return std::abs(a->x - b->x) + std::abs(a->y - b->y);
 }
 
-float Astar::heuristic_cost(Vertex* a, Vertex* b)
-{
+float Astar::heuristic_cost(Vertex* a, Vertex* b) {
     // 2つの頂点間のユークリッド距離を計算
     float dx = a->x - b->x;
     float dy = a->y - b->y;
     return std::sqrt(dx * dx + dy * dy);
 }
 
-void Astar::resetVertices()
-{
+void Astar::resetVertices() {
     for (auto& vertex : vertices) {
         vertex->isClosed = false;
         vertex->previous = nullptr;
     }
+    exploredEdges.clear(); // 探索したエッジをリセット
 }
 
-std::vector<Vertex*> Astar::a_star(Vertex* start, Vertex* goal)
-{
+std::vector<Vertex*> Astar::a_star(Vertex* start, Vertex* goal) {
     resetVertices(); // 各探索の前にリセット
 
     std::priority_queue<Node, std::vector<Node>, std::greater<Node>> queue;
@@ -60,6 +57,9 @@ std::vector<Vertex*> Astar::a_star(Vertex* start, Vertex* goal)
             new_node.f = new_node.g + heuristic_cost(neighbor, goal);
 
             queue.push(new_node);
+
+            // 探索したエッジを追加
+            exploredEdges.push_back({ node.target, neighbor });
         }
     }
 
