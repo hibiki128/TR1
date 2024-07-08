@@ -24,33 +24,53 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // 10x10グリッドの頂点を作成
     int gridSize = 3;
     Vertex grid[3][3];
+    float spacing = 50.0f;
 
-    // 頂点の座標をランダムに設定する関数
-    auto randomizeVertices = [&]() {
-        astar.vertices.clear(); // 現在の頂点をクリア
-
-        for (int y = 0; y < gridSize; ++y) {
-            for (int x = 0; x < gridSize; ++x) {
-                grid[y][x].x = disX(gen);
-                grid[y][x].y = disY(gen);
-                astar.vertices.push_back(&grid[y][x]);
-            }
+    // 頂点の座標を設定
+    for (int y = 0; y < gridSize; ++y) {
+        for (int x = 0; x < gridSize; ++x) {
+            grid[y][x].x = float(spacing * x+500);
+            grid[y][x].y = float(spacing * y+320);
+            astar.vertices.push_back(&grid[y][x]);
         }
+    }
 
-        // 隣接リストを再設定
-        for (int y = 0; y < gridSize; ++y) {
-            for (int x = 0; x < gridSize; ++x) {
-                grid[y][x].neighbors.clear(); // 隣接リストをクリア
-
-                if (x > 0) grid[y][x].neighbors.push_back(&grid[y][x - 1]); // 左
-                if (x < gridSize - 1) grid[y][x].neighbors.push_back(&grid[y][x + 1]); // 右
-                if (y > 0) grid[y][x].neighbors.push_back(&grid[y - 1][x]); // 上
-                if (y < gridSize - 1) grid[y][x].neighbors.push_back(&grid[y + 1][x]); // 下
-            }
+    // 隣接リストを設定
+    for (int y = 0; y < gridSize; ++y) {
+        for (int x = 0; x < gridSize; ++x) {
+            if (x > 0) grid[y][x].neighbors.push_back(&grid[y][x - 1]); // 左
+            if (x < gridSize - 1) grid[y][x].neighbors.push_back(&grid[y][x + 1]); // 右
+            if (y > 0) grid[y][x].neighbors.push_back(&grid[y - 1][x]); // 上
+            if (y < gridSize - 1) grid[y][x].neighbors.push_back(&grid[y + 1][x]); // 下
         }
-        };
+    }
 
-    randomizeVertices(); // 初期ランダム配置
+    //// 頂点の座標をランダムに設定する関数
+    //auto randomizeVertices = [&]() {
+    //    astar.vertices.clear(); // 現在の頂点をクリア
+
+    //    for (int y = 0; y < gridSize; ++y) {
+    //        for (int x = 0; x < gridSize; ++x) {
+    //            grid[y][x].x = disX(gen);
+    //            grid[y][x].y = disY(gen);
+    //            astar.vertices.push_back(&grid[y][x]);
+    //        }
+    //    }
+
+    //    // 隣接リストを再設定
+    //    for (int y = 0; y < gridSize; ++y) {
+    //        for (int x = 0; x < gridSize; ++x) {
+    //            grid[y][x].neighbors.clear(); // 隣接リストをクリア
+
+    //            if (x > 0) grid[y][x].neighbors.push_back(&grid[y][x - 1]); // 左
+    //            if (x < gridSize - 1) grid[y][x].neighbors.push_back(&grid[y][x + 1]); // 右
+    //            if (y > 0) grid[y][x].neighbors.push_back(&grid[y - 1][x]); // 上
+    //            if (y < gridSize - 1) grid[y][x].neighbors.push_back(&grid[y + 1][x]); // 下
+    //        }
+    //    }
+    //    };
+
+    //randomizeVertices(); // 初期ランダム配置
 
     // スタートとゴールを設定
     Vertex* start = &grid[0][0];
@@ -91,7 +111,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             StartSearch = true;
         }
         if (keys[DIK_R] && !preKeys[DIK_R]) {
-            randomizeVertices(); // ランダムで頂点を再設定
+            //randomizeVertices(); // ランダムで頂点を再設定
             StartSearch = false; // 探索をリセット
         }
         if (StartSearch) {
