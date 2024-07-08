@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "Vector2.h"
+#include "./math/Vector2.h"
 #include <random>
 
 enum MapType {
